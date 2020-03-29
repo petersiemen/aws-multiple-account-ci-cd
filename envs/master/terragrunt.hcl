@@ -36,10 +36,19 @@ terraform {
       "plan",
       "apply",
       "destroy",
-      "refresh"]
+      "refresh",
+      "import"]
+
 
     env_vars = {
       TF_VAR_shared_services_account_id = "391559760545"
+      TF_VAR_shared_services_account_email = "peter.siemen+shared-services@gmail.com"
+
+      TF_VAR_development_account_id = "387558367268"
+      TF_VAR_development_account_email = "peter.siemen+development@gmail.com"
+
+      TF_VAR_production_account_id = "098961484923"
+      TF_VAR_production_account_email = "peter.siemen+production@gmail.com"
     }
   }
 

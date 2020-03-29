@@ -48,3 +48,6 @@ into the appropriate IAM roles.
 * SES
 * SNS
 * DynamoDB
+
+
+

@@ -12,15 +12,16 @@
 
 ### master account
 AWS Organization owner for **consolidated billing** and for **service control policies** to 
-configure availability for every account in the organzation.  
+configure the available AWS services for every account in the organization.
 
-### identity account
-The identity account is the access point for developers and admins into the AWS console.
-From the identity account they switch to the other AWS accounts (shared services, development, production, logging)
-into the appropriate IAM roles.
-##### used services 
+We use the master account as well as the central account to configure IAM users.
+From the master account IAM users can switch to the other AWS accounts (shared services, development, production)
+into the appropriate IAM roles. 
+> In order to achieve an even higher level of security one can *eject* the IAM users into yet 
+> another AWS account. We keep the configuration of IAM users in the master account for simplicity for now. 
+##### used services
+* Organizations
 * IAM
-
 
 ### shared services account 
 ##### used services 

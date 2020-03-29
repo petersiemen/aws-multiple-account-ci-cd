@@ -1,0 +1,1 @@
+variable "shared_services_account_id" {}

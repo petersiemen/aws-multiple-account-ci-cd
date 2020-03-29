@@ -5,7 +5,7 @@ remote_state {
     if_exists = "overwrite_terragrunt"
   }
   config = {
-    bucket = "${var.master_account_state_bucket_name}"
+    bucket = "homepage-master-terraform-state"
     key = "${path_relative_to_include()}/terraform.tfstate"
     region = "eu-central-1"
     encrypt = true
@@ -26,25 +26,21 @@ provider "aws" {
   region = "us-east-1"
 }
 
-provider "aws" {
-  region  = "eu-central-1"
-  alias = "identity"
-  assume_role {
-    role_arn = "arn:aws:iam::${var.identity_account_id}:role/IdentityAccountAccessRole"
-  }
-}
-
 EOF
 }
-//
-//terraform {
-//  extra_arguments "common_vars" {
-//    commands = [
-//      "plan",
-//      "apply",
-//      "destroy",
-//      "refresh"]
-//
-//  }
-//
-//}
+
+
+terraform {
+  extra_arguments "common_vars" {
+    commands = [
+      "plan",
+      "apply",
+      "destroy",
+      "refresh"]
+
+    env_vars = {
+      TF_VAR_shared_services_account_id = "391559760545"
+    }
+  }
+
+}

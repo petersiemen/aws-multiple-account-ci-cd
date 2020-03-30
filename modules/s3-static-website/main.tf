@@ -1,5 +1,4 @@
 locals {
-
   subdomain_bucket_name = "www.${var.bucket_name}"
 }
 
@@ -32,7 +31,7 @@ resource "aws_s3_bucket" "bucket" {
             "Sid": "ReadWriteFromSharedServices",
             "Effect": "Allow",
             "Principal": {
-              "AWS":"arn:aws:iam::${var.shared_services_account_id}:root"
+              "AWS": "arn:aws:iam::${var.shared_services_account_id}:root"
             },
             "Action": [
                 "s3:*"

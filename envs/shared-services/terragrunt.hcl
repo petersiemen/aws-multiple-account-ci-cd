@@ -26,6 +26,16 @@ provider "aws" {
   }
 }
 
+provider "aws" {
+  alias = "us-east-1"
+  region = "us-east-1"
+  profile = "homepage-master"
+  assume_role {
+    role_arn  = "arn:aws:iam::391559760545:role/OrganizationAccountAccessRole"
+  }
+}
+
+
 EOF
 }
 

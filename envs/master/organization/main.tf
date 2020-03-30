@@ -7,7 +7,7 @@ resource "aws_organizations_organization" "org" {
     "TAG_POLICY"
   ]
   aws_service_access_principals = [
-    "ram.amazonaws.com",
+    "tagpolicies.tag.amazonaws.com",
     "cloudtrail.amazonaws.com",
     "compute-optimizer.amazonaws.com",
     "config.amazonaws.com",

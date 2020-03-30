@@ -30,6 +30,16 @@ resource "aws_iam_policy" "admin-assume-role" {
             "Action": "sts:AssumeRole",
             "Effect": "Allow",
             "Resource": "arn:aws:iam::${var.shared_services_account_id}:role/OrganizationAccountAccessRole"
+        },
+        {
+            "Action": "sts:AssumeRole",
+            "Effect": "Allow",
+            "Resource": "arn:aws:iam::${var.development_account_id}:role/OrganizationAccountAccessRole"
+        },
+        {
+            "Action": "sts:AssumeRole",
+            "Effect": "Allow",
+            "Resource": "arn:aws:iam::${var.production_account_id}:role/OrganizationAccountAccessRole"
         }
     ]
 }

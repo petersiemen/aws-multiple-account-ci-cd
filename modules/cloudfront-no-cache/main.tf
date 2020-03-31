@@ -1,11 +1,18 @@
 locals {
-  s3_origin_id = var.bucket_regional_domain_name
+  s3_origin_id = "S3-${var.bucket_regional_domain_name}"
 }
 
 resource "aws_cloudfront_distribution" "no-cache" {
   origin {
-    domain_name = var.bucket_regional_domain_name
+    domain_name = var.website_endpoint
     origin_id = local.s3_origin_id
+    custom_origin_config {
+      http_port = 80
+      https_port = 443
+      origin_protocol_policy = "http-only"
+      origin_ssl_protocols = [
+        "TLSv1.1"]
+    }
   }
 
   enabled = true
@@ -27,7 +34,6 @@ resource "aws_cloudfront_distribution" "no-cache" {
       "GET",
       "HEAD"]
     target_origin_id = local.s3_origin_id
-
     forwarded_values {
       query_string = true
 

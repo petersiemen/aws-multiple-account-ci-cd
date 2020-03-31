@@ -2,8 +2,13 @@ provider "aws" {
   alias = "us-east-1"
 }
 
+provider "aws" {
+  alias = "shared-services"
+}
+
 
 data "aws_route53_zone" "main" {
+  provider = aws.shared-services
   count = length(var.zones)
   name = var.zones[count.index]
 }
@@ -28,6 +33,7 @@ resource "aws_acm_certificate_validation" "validation" {
 }
 
 resource "aws_route53_record" "validation_record" {
+  provider = aws.shared-services
   count = length(var.zones)
   name = lookup(aws_acm_certificate.certificate.domain_validation_options[count.index], "resource_record_name")
   type = lookup(aws_acm_certificate.certificate.domain_validation_options[count.index], "resource_record_type")

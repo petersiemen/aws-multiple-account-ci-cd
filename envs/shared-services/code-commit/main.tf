@@ -1,8 +1,10 @@
-locals {
+
+module "homepage" {
+  source = "../../../modules/code-commit"
   name = "homepage"
 }
 
-module "code-build" {
+module "lambda-ses" {
   source = "../../../modules/code-commit"
-  name = local.name
+  name = "lambda-ses"
 }

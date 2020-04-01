@@ -5,7 +5,7 @@ remote_state {
     if_exists = "overwrite_terragrunt"
   }
   config = {
-    bucket = "homepage-shared-services-terraform-state-3"
+    bucket = "homepage-shared-services-terraform-state-new"
     key = "${path_relative_to_include()}/terraform.tfstate"
     region = "eu-central-1"
     encrypt = true
@@ -32,6 +32,15 @@ provider "aws" {
   profile = "homepage-master"
   assume_role {
     role_arn  = "arn:aws:iam::391559760545:role/OrganizationAccountAccessRole"
+  }
+}
+
+provider "aws" {
+  region  = "eu-central-1"
+  alias = "homepage-development"
+  profile = "homepage-master"
+  assume_role {
+    role_arn  = "arn:aws:iam::387558367268:role/OrganizationAccountAccessRole"
   }
 }
 

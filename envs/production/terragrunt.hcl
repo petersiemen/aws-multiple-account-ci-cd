@@ -26,6 +26,24 @@ provider "aws" {
   }
 }
 
+provider "aws" {
+  alias = "us-east-1"
+  region = "us-east-1"
+  profile = "homepage-master"
+  assume_role {
+    role_arn  = "arn:aws:iam::098961484923:role/OrganizationAccountAccessRole"
+  }
+}
+
+provider "aws" {
+  alias = "shared-services"
+  region  = "eu-central-1"
+  profile = "homepage-master"
+  assume_role {
+    role_arn  = "arn:aws:iam::391559760545:role/OrganizationAccountAccessRole"
+  }
+}
+
 EOF
 }
 
@@ -43,6 +61,7 @@ terraform {
     env_vars = {
       TF_VAR_organization = "petersiemen"
       TF_VAR_aws_region = "eu-central-1"
+      TF_VAR_domain = "petersiemen.net"
 
       TF_VAR_shared_services_account_id = "391559760545"
       TF_VAR_shared_services_account_email = "peter.siemen+shared-services@gmail.com"

@@ -5,6 +5,12 @@ resource "aws_codepipeline" "codepipeline" {
   artifact_store {
     location = var.code_build_artifacts_bucket
     type = "S3"
+
+    encryption_key {
+      //      id = aws_kms_alias.s3-key-alias.arn
+      id = var.kms_key_alias_arn
+      type = "KMS"
+    }
   }
 
   stage {
@@ -67,7 +73,6 @@ resource "aws_codepipeline" "codepipeline" {
         OutputFileName = "CreateStackOutput.json"
         StackName = local.code_pipeline_name
         TemplatePath = "build_output::packaged-template.yaml"
-        //        RoleArn = aws_iam_role.codepipeline-deploy-role.arn
         RoleArn = var.cloudformation_deploy_role_arn
         ParameterOverrides = "{\"EMAIL\": \"peter.siemen+development@gmail.com\"}"
       }

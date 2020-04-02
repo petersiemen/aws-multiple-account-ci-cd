@@ -33,6 +33,11 @@ resource "aws_iam_role_policy" "deploy-policy" {
   "Version": "2012-10-17",
   "Statement": [
     {
+      "Effect":"Allow",
+      "Action": ["kms:*"],
+      "Resource": "*"
+    },
+    {
       "Effect": "Allow",
       "Action": [
           "logs:*"

@@ -3,6 +3,8 @@ variable "shared_services_account_id" {}
 variable "development_account_id" {}
 variable "aws_region" {}
 
+variable "kms__key_id" {}
+variable "kms__key_alias_arn" {}
 
 locals {
   name = "lambda-ses"
@@ -12,7 +14,6 @@ module "code-build-artifacts" {
   source = "../../../modules/code-build-artifacts"
   organization = var.organization
   name = local.name
-  development_account_id = var.development_account_id
 }
 
 module "cloudformation-deploy-role-for-development" {
@@ -24,11 +25,21 @@ module "cloudformation-deploy-role-for-development" {
   code_build_artifacts_arn = module.code-build-artifacts.arn
 }
 
+resource "aws_kms_grant" "grant-for-deploy-role" {
+  name = "grant-for-deploy"
+  key_id = var.kms__key_id
+  grantee_principal = module.cloudformation-deploy-role-for-development.arn
+  operations = [
+    "Encrypt",
+    "Decrypt",
+    "GenerateDataKey"]
+}
+
+
 module "code-commit" {
   source = "../../../modules/code-commit"
   name = local.name
 }
-
 
 module "code-build" {
   source = "../../../modules/code-build"
@@ -48,14 +59,22 @@ module "code-build" {
 module "code-pipeline-master" {
   source = "../../../modules/code-pipeline-lambda"
   organization = var.organization
+  development_account_id = var.development_account_id
+  shared_services_account_id = var.shared_services_account_id
+
+  kms_key_id = var.kms__key_id
+  kms_key_alias_arn = var.kms__key_alias_arn
 
   code_commit_repository_name = module.code-commit.repository_name
   code_commit_repository_branch_name = "master"
 
   code_build_artifacts_arn = module.code-build-artifacts.arn
   code_build_artifacts_bucket = module.code-build-artifacts.bucket
+  code_build_artifacts_id = module.code-build-artifacts.id
+
 
   code_build_project_name = module.code-build.project_name
+  code_build_role_arn = module.code-build.role_arn
 
   cloudformation_deploy_role_arn = module.cloudformation-deploy-role-for-development.arn
 

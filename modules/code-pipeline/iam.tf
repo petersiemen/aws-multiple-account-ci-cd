@@ -29,7 +29,7 @@ resource "aws_iam_role_policy" "codepipeline-policy" {
     {
       "Effect":"Allow",
       "Action": [
-        "*"
+        "s3:*"
       ],
       "Resource": [
         "${var.code_build_artifacts_arn}",

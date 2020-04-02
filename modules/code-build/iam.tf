@@ -25,6 +25,11 @@ resource "aws_iam_role_policy" "codebuild-role" {
   "Version": "2012-10-17",
   "Statement": [
     {
+      "Effect":"Allow",
+      "Action": ["kms:*"],
+      "Resource": "*"
+    },
+    {
       "Effect": "Allow",
       "Resource": [
         "*"

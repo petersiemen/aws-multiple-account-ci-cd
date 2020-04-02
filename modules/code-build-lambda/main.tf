@@ -13,10 +13,10 @@ resource "aws_codebuild_project" "codebuild" {
     image = "aws/codebuild/standard:3.0"
     type = "LINUX_CONTAINER"
 
-//    environment_variable {
-//      name = "BUCKET"
-//      value = var.code_build_artifacts_bucket
-//    }
+    environment_variable {
+      name = "BUCKET"
+      value = var.code_build_artifacts_bucket
+    }
   }
 
   source {
@@ -25,5 +25,4 @@ resource "aws_codebuild_project" "codebuild" {
     git_clone_depth = 1
   }
 
-//  source_version = "master"
 }

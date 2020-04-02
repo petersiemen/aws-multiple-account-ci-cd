@@ -1,5 +1,5 @@
 resource "aws_s3_bucket_policy" "artifacts-bucket-policy" {
-  bucket = var.code_pipeline_artifacts_id
+  bucket = var.code_build_artifacts_id
 
   policy = <<POLICY
 {
@@ -10,12 +10,14 @@ resource "aws_s3_bucket_policy" "artifacts-bucket-policy" {
         "Effect": "Allow",
         "Principal": {
             "AWS": ["arn:aws:iam::${var.development_account_id}:root",
-                    "${aws_iam_role.codepipeline-role.arn}"]
+                    "${var.code_pipeline_role_arn}"]
         },
         "Action": [
             "s3:*"
         ],
         "Resource": [
+            "arn:aws:s3:::${var.code_build_artifacts_bucket}",
+            "arn:aws:s3:::${var.code_build_artifacts_bucket}/*",
             "arn:aws:s3:::${var.code_pipeline_artifacts_bucket}",
             "arn:aws:s3:::${var.code_pipeline_artifacts_bucket}/*"
         ]
@@ -24,4 +26,3 @@ resource "aws_s3_bucket_policy" "artifacts-bucket-policy" {
 }
 POLICY
 }
-

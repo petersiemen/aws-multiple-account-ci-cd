@@ -1,4 +1,5 @@
 variable "organization" {}
+variable "domain" {}
 variable "shared_services_account_id" {}
 variable "development_account_id" {}
 variable "aws_region" {}
@@ -34,12 +35,11 @@ module "code-build" {
   code_build_artifacts_bucket = module.code-build-artifacts.bucket
   code_pipeline_artifacts_arn = module.code-pipeline-artifacts.arn
 
-
   name = local.name
 }
 
 module "code-pipeline-master" {
-  source = "../../../modules/code-pipeline"
+  source = "../../../modules/code-pipeline-static-website"
   organization = var.organization
 
   code_commit_repository_name = module.code-commit.repository_name
@@ -49,7 +49,7 @@ module "code-pipeline-master" {
   code_pipeline_artifacts_bucket = module.code-pipeline-artifacts.bucket
   code_pipeline_artifacts_arn = module.code-pipeline-artifacts.arn
 
-  s3_static_website_bucket_arn = "arn:aws:s3:::preview.petersiemen.de"
-  s3_static_website_bucket_name = "preview.petersiemen.de"
-  name = "homepage-develop-to-development"
+  s3_static_website_bucket_arn = "arn:aws:s3:::preview.${var.domain}"
+  s3_static_website_bucket_name = "preview.${var.domain}"
+  name = "homepage-master-to-development"
 }

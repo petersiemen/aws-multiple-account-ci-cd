@@ -1,5 +1,7 @@
+variable "domain" {}
+
 locals {
-  domain = "preview.petersiemen.de"
+  domain = "preview.${var.domain}"
 }
 
 module "certificates" {
@@ -14,6 +16,6 @@ module "certificates" {
     "www.${local.domain}"
   ]
   zones = [
-    "petersiemen.de",
-    "petersiemen.de"]
+    var.domain,
+    var.domain]
 }

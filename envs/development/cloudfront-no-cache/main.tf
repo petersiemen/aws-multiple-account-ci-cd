@@ -1,4 +1,5 @@
 variable "shared_services_account_id" {}
+variable "domain" {}
 
 variable "certificates__acm_certification_arn" {}
 variable "s3_static_website__bucket_name" {}
@@ -19,7 +20,7 @@ module "cloudfront-no-cache" {
 
 data "aws_route53_zone" "main" {
   provider = aws.shared-services
-  name = "petersiemen.de"
+  name = var.domain
 }
 
 resource "aws_route53_record" "www" {

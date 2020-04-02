@@ -7,7 +7,6 @@ resource "aws_codebuild_project" "codebuild" {
     location = var.code_build_artifacts_bucket
   }
 
-
   environment {
     compute_type = "BUILD_GENERAL1_SMALL"
     image = "aws/codebuild/standard:3.0"

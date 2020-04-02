@@ -6,6 +6,8 @@ resource "aws_s3_bucket" "bucket" {
   bucket = var.bucket_name
   acl = "public-read"
 
+  force_destroy = true
+
   website {
     index_document = "index.html"
     error_document = "error.html"
@@ -50,6 +52,8 @@ POLICY
 resource "aws_s3_bucket" "redirect-bucket" {
   bucket = local.subdomain_bucket_name
   acl = "public-read"
+
+  force_destroy = true
 
   website {
 

@@ -32,8 +32,8 @@ resource "aws_iam_role_policy" "codepipeline-policy" {
         "s3:*"
       ],
       "Resource": [
-        "${var.code_build_artifacts_arn}",
-        "${var.code_build_artifacts_arn}/*",
+        "${var.code_pipeline_artifacts_arn}",
+        "${var.code_pipeline_artifacts_arn}/*",
         "${var.s3_static_website_bucket_arn}",
         "${var.s3_static_website_bucket_arn}/*"
       ]

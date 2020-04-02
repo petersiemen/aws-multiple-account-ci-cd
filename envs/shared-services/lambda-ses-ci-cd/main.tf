@@ -30,21 +30,13 @@ module "code-pipeline-artifacts" {
 module "cloudformation-deploy-role-for-development" {
   providers = {
     aws = aws.homepage-development
+    aws.shared-services = aws
   }
   source = "../../../modules/cloudformation-deploy-role"
   shared_services_account_id = var.shared_services_account_id
   code_build_artifacts_arn = module.code-build-artifacts.arn
   code_pipeline_artifacts_arn = module.code-pipeline-artifacts.arn
-}
-
-resource "aws_kms_grant" "grant-for-deploy-role" {
-  name = "grant-for-deploy"
-  key_id = var.kms__key_id
-  grantee_principal = module.cloudformation-deploy-role-for-development.arn
-  operations = [
-    "Encrypt",
-    "Decrypt",
-    "GenerateDataKey"]
+  kms__key_id = var.kms__key_id
 }
 
 
@@ -60,6 +52,7 @@ module "code-build-lambda" {
   code_build_artifacts_id = module.code-build-artifacts.id
 
   code_pipeline_artifacts_arn = module.code-pipeline-artifacts.arn
+  kms_key_id = var.kms__key_id
 
   name = local.name
 }
@@ -86,6 +79,4 @@ module "code-pipeline-master" {
   cloudformation_deploy_role_arn = module.cloudformation-deploy-role-for-development.arn
 
   name = "${local.name}-master"
-
-
 }

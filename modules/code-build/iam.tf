@@ -54,7 +54,9 @@ resource "aws_iam_role_policy" "codebuild-role" {
       ],
       "Resource": [
         "${var.code_build_artifacts_arn}",
-        "${var.code_build_artifacts_arn}/*"
+        "${var.code_build_artifacts_arn}/*",
+        "${var.code_pipeline_artifacts_arn}",
+        "${var.code_pipeline_artifacts_arn}/*"
       ]
     }
   ]

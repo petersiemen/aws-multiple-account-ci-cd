@@ -3,14 +3,9 @@ resource "aws_codepipeline" "codepipeline" {
   role_arn = aws_iam_role.codepipeline-role.arn
 
   artifact_store {
-    location = var.code_build_artifacts_bucket
+//    location = var.code_build_artifacts_bucket
+    location = var.code_pipeline_artifacts_bucket
     type = "S3"
-
-
-    //    encryption_key {
-    //      id   = "${data.aws_kms_alias.s3kmskey.arn}"
-    //      type = "KMS"
-    //    }
   }
 
   stage {

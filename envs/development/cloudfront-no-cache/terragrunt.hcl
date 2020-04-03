@@ -29,10 +29,24 @@ dependency "s3-static-website" {
   }
 }
 
+dependency "api-gateway" {
+  config_path = "../api-gateway"
+  mock_outputs_allowed_terraform_commands = [
+    "validate",
+    "plan",
+    "destroy"]
+
+  mock_outputs = {
+    deployment_invoke_url = "fake___deployment_invoke_url"
+  }
+}
+
 inputs = {
   certificates__acm_certification_arn = dependency.certificates.outputs.acm_certification_arn
 
   s3_static_website__bucket_name = dependency.s3-static-website.outputs.bucket_name
   s3_static_website__website_endpoint = dependency.s3-static-website.outputs.website_endpoint
   s3_static_website__bucket_regional_domain_name = dependency.s3-static-website.outputs.bucket_regional_domain_name
+
+  api_gateway__deployment_invoke_url = dependency.api-gateway.outputs.deployment_invoke_url
 }

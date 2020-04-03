@@ -44,6 +44,14 @@ provider "aws" {
   }
 }
 
+provider "aws" {
+  region  = "eu-central-1"
+  alias = "homepage-production"
+  profile = "homepage-master"
+  assume_role {
+    role_arn  = "arn:aws:iam::098961484923:role/OrganizationAccountAccessRole"
+  }
+}
 
 EOF
 }

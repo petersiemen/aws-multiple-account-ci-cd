@@ -1,6 +1,7 @@
 variable "organization" {}
 variable "shared_services_account_id" {}
 variable "development_account_id" {}
+variable "production_account_id" {}
 variable "aws_region" {}
 
 variable "kms__key_id" {}
@@ -27,9 +28,21 @@ module "code-pipeline-artifacts" {
   name = local.name
 }
 
-module "cloudformation-deploy-role-for-development" {
+module "deploy-role-for-development" {
   providers = {
     aws = aws.homepage-development
+    aws.shared-services = aws
+  }
+  source = "../../../modules/cloudformation-deploy-role"
+  shared_services_account_id = var.shared_services_account_id
+  code_build_artifacts_arn = module.code-build-artifacts.arn
+  code_pipeline_artifacts_arn = module.code-pipeline-artifacts.arn
+  kms__key_id = var.kms__key_id
+}
+
+module "deploy-role-for-production" {
+  providers = {
+    aws = aws.homepage-production
     aws.shared-services = aws
   }
   source = "../../../modules/cloudformation-deploy-role"
@@ -49,7 +62,7 @@ module "code-build-lambda" {
 
   code_build_artifacts_arn = module.code-build-artifacts.arn
   code_build_artifacts_bucket = module.code-build-artifacts.bucket
-  code_build_artifacts_id = module.code-build-artifacts.id
+  //  code_build_artifacts_id = module.code-build-artifacts.id
 
   code_pipeline_artifacts_arn = module.code-pipeline-artifacts.arn
   kms_key_id = var.kms__key_id
@@ -57,10 +70,33 @@ module "code-build-lambda" {
   name = local.name
 }
 
-module "code-pipeline-master" {
+module "code-pipeline-develop-to-development" {
   source = "../../../modules/code-pipeline-lambda"
   organization = var.organization
-  development_account_id = var.development_account_id
+  account_id_for_deployment = var.development_account_id
+  shared_services_account_id = var.shared_services_account_id
+
+  kms_key_id = var.kms__key_id
+  kms_key_alias_arn = var.kms__key_alias_arn
+
+  code_commit_repository_name = module.code-commit.repository_name
+  code_commit_repository_branch_name = "develop"
+
+  code_pipeline_artifacts_arn = module.code-pipeline-artifacts.arn
+  code_pipeline_artifacts_bucket = module.code-pipeline-artifacts.bucket
+
+  code_build_project_name = module.code-build-lambda.project_name
+  code_build_role_arn = module.code-build-lambda.role_arn
+
+  cloudformation_deploy_role_arn = module.deploy-role-for-development.arn
+
+  name = "${local.name}-develop-to-development"
+}
+
+module "code-pipeline-master-to-production" {
+  source = "../../../modules/code-pipeline-lambda"
+  organization = var.organization
+  account_id_for_deployment = var.production_account_id
   shared_services_account_id = var.shared_services_account_id
 
   kms_key_id = var.kms__key_id
@@ -71,12 +107,26 @@ module "code-pipeline-master" {
 
   code_pipeline_artifacts_arn = module.code-pipeline-artifacts.arn
   code_pipeline_artifacts_bucket = module.code-pipeline-artifacts.bucket
-  code_pipeline_artifacts_id = module.code-pipeline-artifacts.id
 
   code_build_project_name = module.code-build-lambda.project_name
   code_build_role_arn = module.code-build-lambda.role_arn
 
-  cloudformation_deploy_role_arn = module.cloudformation-deploy-role-for-development.arn
+  cloudformation_deploy_role_arn = module.deploy-role-for-production.arn
 
-  name = "${local.name}-master"
+  name = "${local.name}-master-to-production"
+}
+
+module "artifacts-bucket-policy" {
+  source = "../../../modules/artifacts-bucket-policy"
+  code_build_artifacts_bucket = module.code-build-artifacts.bucket
+  code_build_artifacts_id = module.code-build-artifacts.id
+  code_build_role_arn = module.code-build-lambda.role_arn
+
+  code_pipeline_artifacts_bucket = module.code-pipeline-artifacts.bucket
+  code_pipeline_artifacts_id = module.code-pipeline-artifacts.id
+  code_pipeline_role_arn = module.code-pipeline-master-to-production.role_arn
+
+  development_account_id = var.development_account_id
+  production_account_id = var.production_account_id
+
 }

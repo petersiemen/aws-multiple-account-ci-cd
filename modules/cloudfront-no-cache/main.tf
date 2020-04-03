@@ -15,6 +15,20 @@ resource "aws_cloudfront_distribution" "no-cache" {
     }
   }
 
+  origin {
+    domain_name = trimsuffix(trimprefix(var.api_gateway_deployment_invoke_url, "https://"), "/prod")
+    origin_id = trimsuffix(trimprefix(var.api_gateway_deployment_invoke_url, "https://"), "/prod")
+    origin_path = "/prod"
+
+    custom_origin_config {
+      http_port = 80
+      https_port = 443
+      origin_protocol_policy = "https-only"
+      origin_ssl_protocols = [
+        "TLSv1.1"]
+    }
+  }
+
   enabled = true
   is_ipv6_enabled = true
   default_root_object = "index.html"
@@ -50,6 +64,37 @@ resource "aws_cloudfront_distribution" "no-cache" {
 
   }
 
+
+  ordered_cache_behavior {
+    path_pattern = "/api"
+
+    allowed_methods = [
+      "DELETE",
+      "GET",
+      "HEAD",
+      "OPTIONS",
+      "PATCH",
+      "POST",
+      "PUT"]
+    cached_methods = [
+      "GET",
+      "HEAD"]
+
+    target_origin_id = trimsuffix(trimprefix(var.api_gateway_deployment_invoke_url, "https://"), "/prod")
+
+    viewer_protocol_policy = "redirect-to-https"
+
+    forwarded_values {
+      query_string = true
+      cookies {
+        forward = "all"
+      }
+    }
+    min_ttl = 0
+    default_ttl = 0
+    max_ttl = 0
+
+  }
 
   restrictions {
     geo_restriction {

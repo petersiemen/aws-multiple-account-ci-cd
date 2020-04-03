@@ -1,5 +1,5 @@
 resource "aws_iam_role" "codepipeline-role" {
-  name = "${local.code_pipeline_name}-service-role"
+  name = local.code_pipeline_name
 
   assume_role_policy = <<EOF
 {
@@ -17,7 +17,7 @@ resource "aws_iam_role" "codepipeline-role" {
 EOF
 }
 resource "aws_iam_role_policy" "codepipeline-policy" {
-  name = "${local.code_pipeline_name}-policy"
+  name = local.code_pipeline_name
   role = aws_iam_role.codepipeline-role.id
 
   policy = <<EOF
@@ -101,84 +101,3 @@ resource "aws_iam_role_policy" "codepipeline-policy" {
 EOF
 }
 
-//
-//resource "aws_iam_role" "codepipeline-deploy-role" {
-//  name = "${local.code_pipeline_name}-deploy-role"
-//
-//  assume_role_policy = <<EOF
-//{
-//  "Version": "2012-10-17",
-//  "Statement": [
-//    {
-//      "Action": "sts:AssumeRole",
-//      "Principal": {
-//        "Service": "cloudformation.amazonaws.com"
-//      },
-//      "Effect": "Allow"
-//    }
-//  ]
-//}
-//EOF
-//}
-//
-//
-//resource "aws_iam_role_policy" "deploy-policy" {
-//  name = "${local.code_pipeline_name}-deploy-policy"
-//  role = aws_iam_role.codepipeline-deploy-role.id
-//
-//  policy = <<-EOF
-//{
-//  "Version": "2012-10-17",
-//  "Statement": [
-//    {
-//          "Effect": "Allow",
-//          "Action": [
-//              "logs:*"
-//          ],
-//          "Resource": "arn:aws:logs:*:*:*"
-//      },
-//      {
-//          "Effect": "Allow",
-//          "Action": [
-//              "s3:GetObject",
-//              "s3:PutObject"
-//          ],
-//          "Resource": "arn:aws:s3:::*"
-//      },
-//      {
-//          "Action": [
-//              "apigateway:*",
-//              "codedeploy:*",
-//              "lambda:*",
-//              "cloudformation:CreateChangeSet",
-//              "iam:GetRole",
-//              "iam:CreateRole",
-//              "iam:DeleteRole",
-//              "iam:PutRolePolicy",
-//              "iam:AttachRolePolicy",
-//              "iam:DeleteRolePolicy",
-//              "iam:DetachRolePolicy",
-//              "iam:PassRole",
-//              "s3:GetObject",
-//              "s3:GetObjectVersion",
-//              "s3:GetBucketVersioning"
-//          ],
-//          "Resource": "*",
-//          "Effect": "Allow"
-//      }
-//  ]
-//}
-//EOF
-//}
-//
-//resource "null_resource" "foo" {
-//  triggers {
-//    interpreter = var.local_exec_interpreter
-//  }
-//  provisioner {
-//    when = destroy
-//
-//    interpreter = self.triggers.interpreter
-//    ...
-//  }
-//}

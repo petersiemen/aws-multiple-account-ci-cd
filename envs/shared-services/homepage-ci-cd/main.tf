@@ -38,7 +38,23 @@ module "code-build" {
   name = local.name
 }
 
-module "code-pipeline-master" {
+module "code-pipeline-develop-to-development" {
+  source = "../../../modules/code-pipeline-static-website"
+  organization = var.organization
+
+  code_commit_repository_name = module.code-commit.repository_name
+  code_commit_repository_branch_name = "develop"
+
+  code_build_project_name = module.code-build.project_name
+  code_pipeline_artifacts_bucket = module.code-pipeline-artifacts.bucket
+  code_pipeline_artifacts_arn = module.code-pipeline-artifacts.arn
+
+  s3_static_website_bucket_arn = "arn:aws:s3:::preview.${var.domain}"
+  s3_static_website_bucket_name = "preview.${var.domain}"
+  name = "homepage-develop-to-development"
+}
+
+module "code-pipeline-master-to-production" {
   source = "../../../modules/code-pipeline-static-website"
   organization = var.organization
 
@@ -49,7 +65,7 @@ module "code-pipeline-master" {
   code_pipeline_artifacts_bucket = module.code-pipeline-artifacts.bucket
   code_pipeline_artifacts_arn = module.code-pipeline-artifacts.arn
 
-  s3_static_website_bucket_arn = "arn:aws:s3:::preview.${var.domain}"
-  s3_static_website_bucket_name = "preview.${var.domain}"
-  name = "homepage-master-to-development"
+  s3_static_website_bucket_arn = "arn:aws:s3:::${var.domain}"
+  s3_static_website_bucket_name = "${var.domain}"
+  name = "homepage-master-to-production"
 }

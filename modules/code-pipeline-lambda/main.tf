@@ -74,7 +74,7 @@ resource "aws_codepipeline" "codepipeline" {
         StackName = local.code_pipeline_name
         TemplatePath = "build_output::packaged-template.yaml"
         RoleArn = var.cloudformation_deploy_role_arn
-        ParameterOverrides = "{\"EMAIL\": \"peter.siemen+development@gmail.com\"}"
+        ParameterOverrides = "{\"EMAIL\": \"${var.ses_verified_email_address}\"}"
       }
     }
   }

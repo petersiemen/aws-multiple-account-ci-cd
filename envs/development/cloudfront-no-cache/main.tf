@@ -42,19 +42,6 @@ resource "aws_route53_record" "www" {
   }
 }
 
-resource "aws_route53_record" "api" {
-  provider = aws.shared-services
-  zone_id = data.aws_route53_zone.main.zone_id
-  name = "api.preview"
-  type = "A"
-
-  alias {
-    name = module.cloudfront-no-cache.domain_name
-    zone_id = module.cloudfront-no-cache.hosted_zone_id
-    evaluate_target_health = false
-  }
-}
-
 
 resource "aws_route53_record" "apex" {
   provider = aws.shared-services

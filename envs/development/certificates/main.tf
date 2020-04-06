@@ -14,10 +14,8 @@ module "certificates" {
   domain_name = local.domain
   subject_alternative_names = [
     "www.${local.domain}",
-    "api.${local.domain}",
   ]
   zones = [
-    var.domain,
     var.domain,
     var.domain]
 }

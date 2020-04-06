@@ -66,7 +66,7 @@ resource "aws_cloudfront_distribution" "no-cache" {
 
 
   ordered_cache_behavior {
-    path_pattern = "/api"
+    path_pattern = "/api/*"
 
     allowed_methods = [
       "DELETE",

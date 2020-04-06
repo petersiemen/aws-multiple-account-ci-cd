@@ -1,7 +1,9 @@
 variable "organization" {}
 variable "shared_services_account_id" {}
 variable "development_account_id" {}
+variable "development_account_email" {}
 variable "production_account_id" {}
+variable "production_account_email" {}
 variable "aws_region" {}
 
 variable "kms__key_id" {}
@@ -89,6 +91,7 @@ module "code-pipeline-develop-to-development" {
   code_build_role_arn = module.code-build-lambda.role_arn
 
   cloudformation_deploy_role_arn = module.deploy-role-for-development.arn
+  ses_verified_email_address = var.development_account_email
 
   name = "${local.name}-develop-to-development"
 }
@@ -112,6 +115,8 @@ module "code-pipeline-master-to-production" {
   code_build_role_arn = module.code-build-lambda.role_arn
 
   cloudformation_deploy_role_arn = module.deploy-role-for-production.arn
+
+  ses_verified_email_address = var.production_account_email
 
   name = "${local.name}-master-to-production"
 }

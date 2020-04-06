@@ -43,13 +43,13 @@ resource "aws_codepipeline" "codepipeline" {
 
       configuration = {
         ProjectName = var.code_build_project_name
-        EnvironmentVariables = jsonencode([
-          {
-            name = "API_PATH"
-            value = "/api/contact"
-            type = "PLAINTEXT"
-          }
-        ])
+//        EnvironmentVariables = jsonencode([
+//          {
+//            name = "API_PATH"
+//            value = "/api/contact"
+//            type = "PLAINTEXT"
+//          }
+//        ])
 
       }
     }

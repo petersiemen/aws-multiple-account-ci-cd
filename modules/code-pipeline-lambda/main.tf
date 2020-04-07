@@ -2,9 +2,22 @@ resource "aws_codepipeline" "codepipeline" {
   name = local.code_pipeline_name
   role_arn = aws_iam_role.codepipeline-role.arn
 
+
+//  artifact_store {
+//    location = var.code_pipeline_artifacts_bucket
+//    type = "S3"
+//    region = "eu-central-1"
+//
+//    encryption_key {
+//      id = var.kms_key_alias_arn
+//      type = "KMS"
+//    }
+//  }
+
   artifact_store {
     location = var.code_pipeline_artifacts_bucket
     type = "S3"
+//    region = "eu-west-1"
 
     encryption_key {
       id = var.kms_key_alias_arn
@@ -56,11 +69,11 @@ resource "aws_codepipeline" "codepipeline" {
   stage {
     name = "Deploy"
 
-
     action {
       name = "Deploy"
       category = "Deploy"
       owner = "AWS"
+//      region = var.deploy_stage_region
       provider = "CloudFormation"
       input_artifacts = [
         "build_output"]
@@ -74,7 +87,8 @@ resource "aws_codepipeline" "codepipeline" {
         StackName = local.code_pipeline_name
         TemplatePath = "build_output::packaged-template.yaml"
         RoleArn = var.cloudformation_deploy_role_arn
-        ParameterOverrides = "{\"EMAIL\": \"${var.ses_verified_email_address}\"}"
+
+        ParameterOverrides = var.deploy_stage_parameter_overrides
       }
     }
   }

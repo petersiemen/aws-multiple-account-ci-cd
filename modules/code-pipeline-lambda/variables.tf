@@ -16,4 +16,6 @@ variable "code_build_project_name" {}
 variable "code_build_role_arn" {}
 
 variable "cloudformation_deploy_role_arn" {}
-variable "ses_verified_email_address" {}
+
+variable "deploy_stage_parameter_overrides" {}
+variable "deploy_stage_region" {}

@@ -19,4 +19,5 @@ dependency "kms" {
 inputs = {
   kms__key_id = dependency.kms.outputs.key_id
   kms__key_alias_arn = dependency.kms.outputs.key_alias_arn
+
 }

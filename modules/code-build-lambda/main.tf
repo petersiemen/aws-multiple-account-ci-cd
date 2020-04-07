@@ -5,6 +5,8 @@ resource "aws_codebuild_project" "codebuild" {
   artifacts {
     type = "S3"
     location = var.code_build_artifacts_bucket
+    namespace_type = "BUILD_ID"
+    name = var.name
   }
 
   environment {

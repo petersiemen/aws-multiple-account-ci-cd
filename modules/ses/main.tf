@@ -70,10 +70,6 @@ resource "aws_s3_bucket" "bucket" {
 EOF
 }
 
-resource "aws_sns_topic" "mail" {
-  name = "mail"
-}
-
 
 resource "aws_ses_receipt_rule_set" "main" {
   rule_set_name = "primary-rules"
@@ -81,6 +77,8 @@ resource "aws_ses_receipt_rule_set" "main" {
 
 # Add a header to the email and store it in S3
 resource "aws_ses_receipt_rule" "store" {
+  depends_on = [
+    aws_lambda_permission.allow_ses]
   name = "store"
   rule_set_name = aws_ses_receipt_rule_set.main.rule_set_name
 
@@ -96,11 +94,20 @@ resource "aws_ses_receipt_rule" "store" {
   }
 
   lambda_action {
-    function_arn = "arn:aws:lambda:eu-west-1:387558367268:function:test"
+    function_arn = "arn:aws:lambda:${var.aws_region}:${var.aws_account_id}:function:${var.lambda_function_name}"
     position = 0
   }
 }
 
 resource "aws_ses_active_receipt_rule_set" "main" {
   rule_set_name = aws_ses_receipt_rule_set.main.rule_set_name
+}
+
+# Allow SES to start this lambda
+resource "aws_lambda_permission" "allow_ses" {
+  statement_id = "AllowExecutionFromSES"
+  action = "lambda:InvokeFunction"
+  function_name = var.lambda_function_name
+  //  source_account = "${var.}"
+  principal = "ses.amazonaws.com"
 }

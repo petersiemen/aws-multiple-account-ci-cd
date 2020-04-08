@@ -3,3 +3,4 @@
 generated-backend.tf
 generated-provider.tf
 terraform.auto.tfvars
+envs/common.hcl

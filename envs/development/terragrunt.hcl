@@ -1,3 +1,7 @@
+locals {
+  common = read_terragrunt_config(find_in_parent_folders("common.hcl"))
+}
+
 remote_state {
   backend = "s3"
   generate = {
@@ -7,7 +11,7 @@ remote_state {
   config = {
     bucket = "homepage-development-terraform-state"
     key = "${path_relative_to_include()}/terraform.tfstate"
-    region = "eu-central-1"
+    region = local.common.inputs.aws_region
     encrypt = true
     dynamodb_table = "development-terraform-lock"
   }
@@ -22,7 +26,7 @@ provider "aws" {
   region  = "eu-central-1"
   profile = "homepage-master"
   assume_role {
-    role_arn  = "arn:aws:iam::387558367268:role/OrganizationAccountAccessRole"
+    role_arn  = "arn:aws:iam::${local.common.inputs.development_account_id}:role/OrganizationAccountAccessRole"
   }
 }
 
@@ -31,7 +35,7 @@ provider "aws" {
   region = "eu-west-1"
   profile = "homepage-master"
   assume_role {
-    role_arn  = "arn:aws:iam::387558367268:role/OrganizationAccountAccessRole"
+    role_arn  = "arn:aws:iam::${local.common.inputs.development_account_id}:role/OrganizationAccountAccessRole"
   }
 }
 
@@ -40,7 +44,7 @@ provider "aws" {
   region = "us-east-1"
   profile = "homepage-master"
   assume_role {
-    role_arn  = "arn:aws:iam::387558367268:role/OrganizationAccountAccessRole"
+    role_arn  = "arn:aws:iam::${local.common.inputs.development_account_id}:role/OrganizationAccountAccessRole"
   }
 }
 
@@ -50,7 +54,7 @@ provider "aws" {
   region  = "eu-central-1"
   profile = "homepage-master"
   assume_role {
-    role_arn  = "arn:aws:iam::391559760545:role/OrganizationAccountAccessRole"
+    role_arn  = "arn:aws:iam::${local.common.inputs.shared_services_account_id}:role/OrganizationAccountAccessRole"
   }
 }
 
@@ -69,18 +73,18 @@ terraform {
 
 
     env_vars = {
-      TF_VAR_organization = "petersiemen"
-      TF_VAR_aws_region = "eu-central-1"
-      TF_VAR_domain = "petersiemen.net"
+      TF_VAR_organization = local.common.inputs.organization
+      TF_VAR_aws_region = local.common.inputs.aws_region
+      TF_VAR_domain = local.common.inputs.domain
 
-      TF_VAR_shared_services_account_id = "391559760545"
-      TF_VAR_shared_services_account_email = "peter.siemen+shared-services@gmail.com"
+      TF_VAR_shared_services_account_id = local.common.inputs.shared_services_account_id
+      TF_VAR_shared_services_account_email = local.common.inputs.shared_services_account_email
 
-      TF_VAR_development_account_id = "387558367268"
-      TF_VAR_development_account_email = "peter.siemen+development@gmail.com"
+      TF_VAR_development_account_id = local.common.inputs.development_account_id
+      TF_VAR_development_account_email = local.common.inputs.development_account_email
 
-      TF_VAR_production_account_id = "098961484923"
-      TF_VAR_production_account_email = "peter.siemen+production@gmail.com"
+      TF_VAR_production_account_id = local.common.inputs.production_account_id
+      TF_VAR_production_account_email = local.common.inputs.production_account_email
 
     }
   }

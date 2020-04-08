@@ -1,5 +1,5 @@
 resource "aws_iam_role" "codebuild-role" {
-  name = "${local.code_build_name}-service-role"
+  name = "${var.name}-code-build-role"
 
   assume_role_policy = <<EOF
 {
@@ -19,7 +19,7 @@ EOF
 
 resource "aws_iam_role_policy" "codebuild-role" {
   role = aws_iam_role.codebuild-role.name
-  name = "${local.code_build_name}-policy"
+  name = "${var.name}-code-build-policy"
   policy = <<POLICY
 {
   "Version": "2012-10-17",
@@ -56,7 +56,11 @@ resource "aws_iam_role_policy" "codebuild-role" {
         "${var.code_build_artifacts_arn}",
         "${var.code_build_artifacts_arn}/*",
         "${var.code_pipeline_artifacts_arn}",
-        "${var.code_pipeline_artifacts_arn}/*"
+        "${var.code_pipeline_artifacts_arn}/*",
+        "${var.code_build_artifacts_arn_eu_west_1}",
+        "${var.code_build_artifacts_arn_eu_west_1}/*",
+        "${var.code_pipeline_artifacts_arn_eu_west_1}",
+        "${var.code_pipeline_artifacts_arn_eu_west_1}/*"
       ]
     }
   ]

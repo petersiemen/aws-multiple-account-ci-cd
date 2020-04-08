@@ -1,5 +1,5 @@
 resource "aws_iam_role" "codepipeline-role" {
-  name = local.code_pipeline_name
+  name = "${var.name}-code-pipeline-role"
 
   assume_role_policy = <<EOF
 {
@@ -17,8 +17,8 @@ resource "aws_iam_role" "codepipeline-role" {
 EOF
 }
 resource "aws_iam_role_policy" "codepipeline-policy" {
-  name = local.code_pipeline_name
   role = aws_iam_role.codepipeline-role.id
+  name = "${var.name}-code-pipeline-policy"
 
   policy = <<EOF
 {
@@ -50,7 +50,9 @@ resource "aws_iam_role_policy" "codepipeline-policy" {
       ],
       "Resource": [
         "${var.code_pipeline_artifacts_arn}",
-        "${var.code_pipeline_artifacts_arn}/*"
+        "${var.code_pipeline_artifacts_arn}/*",
+        "${var.code_pipeline_artifacts_arn_eu_west_1}",
+        "${var.code_pipeline_artifacts_arn_eu_west_1}/*"
       ]
     },
     {
@@ -64,15 +66,6 @@ resource "aws_iam_role_policy" "codepipeline-policy" {
       ],
       "Resource": "*",
       "Effect": "Allow"
-    },
-    {
-      "Effect": "Allow",
-      "Resource": [
-          "*"
-      ],
-      "Action": [
-          "codecommit:GitPull"
-      ]
     },
     {
       "Effect": "Allow",

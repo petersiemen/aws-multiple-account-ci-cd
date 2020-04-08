@@ -1,7 +1,6 @@
-variable "shared_services_account_id" {}
+variable "name" {}
 variable "code_build_artifacts_arn" {}
 variable "code_pipeline_artifacts_arn" {}
-
 variable "code_build_artifacts_arn_eu_west_1" {}
 variable "code_pipeline_artifacts_arn_eu_west_1" {}
 

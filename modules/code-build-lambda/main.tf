@@ -1,6 +1,6 @@
 resource "aws_codebuild_project" "codebuild" {
   name = local.code_build_name
-  service_role = aws_iam_role.codebuild-role.arn
+  service_role = var.code_build_role_arn
 
   artifacts {
     type = "S3"

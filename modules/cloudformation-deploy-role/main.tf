@@ -78,7 +78,11 @@ resource "aws_iam_role_policy" "deploy-policy" {
         "${var.code_build_artifacts_arn}",
         "${var.code_build_artifacts_arn}/*",
         "${var.code_pipeline_artifacts_arn}",
-        "${var.code_pipeline_artifacts_arn}/*"
+        "${var.code_pipeline_artifacts_arn}/*",
+        "${var.code_build_artifacts_arn_eu_west_1}",
+        "${var.code_build_artifacts_arn_eu_west_1}/*",
+        "${var.code_pipeline_artifacts_arn_eu_west_1}",
+        "${var.code_pipeline_artifacts_arn_eu_west_1}/*"
       ]
     }
   ]

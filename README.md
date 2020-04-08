@@ -1,12 +1,9 @@
 # aws-multiple-account-ci-cd
 
-##### Ready to used template of a production grade multi account structure for AWS
+##### Ready to used template of a multi-account multi-region ci/cd pipeline
 
-* Central configuration of users and access permissions in a dedicated **identity account**
 * Clear separation of production and development by using 2 independent accounts
-* Effective use of a ci/cd pipeline in a shared services account for automatic git push based deployments into development and production
-* Automatic feature branch deployments into development    
-
+* Effective use of a ci/cd pipeline in a shared services account for automatic git push based deployments into development and production    
 
 ## AWS multiple account structure
 
@@ -14,7 +11,7 @@
 AWS Organization owner for **consolidated billing** and for **service control policies** to 
 configure the available AWS services for every account in the organization.
 
-We use the master account as well as the central account to configure IAM users.
+I use the master account as the central account to configure IAM users.
 From the master account IAM users can switch to the other AWS accounts (shared services, development, production)
 into the appropriate IAM roles. 
 > In order to achieve an even higher level of security one can *eject* the IAM users into yet 
@@ -29,7 +26,7 @@ into the appropriate IAM roles.
 * CodeCommit 
 * CodeBuild
 * CodePipeline 
-* S3 artifact store for CodeBuild and CodePipeline 
+* S3 artifact store for CodeBuild and CodePipeline
 
 ### development account
 ##### used services 
@@ -38,7 +35,6 @@ into the appropriate IAM roles.
 * Lambda
 * SES
 * SNS
-* DynamoDB
 
 ### production account
 ##### used services 
@@ -47,7 +43,6 @@ into the appropriate IAM roles.
 * Lambda
 * SES
 * SNS
-* DynamoDB
 
 
 

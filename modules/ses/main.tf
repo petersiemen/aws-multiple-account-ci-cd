@@ -108,6 +108,5 @@ resource "aws_lambda_permission" "allow_ses" {
   statement_id = "AllowExecutionFromSES"
   action = "lambda:InvokeFunction"
   function_name = var.lambda_function_name
-  //  source_account = "${var.}"
   principal = "ses.amazonaws.com"
 }

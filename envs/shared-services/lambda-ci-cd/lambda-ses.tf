@@ -53,7 +53,7 @@ module "lambda-ses-code-pipeline-master-to-production" {
   cloudformation_deploy_role_arn = module.cloudformation-deploy-role-for-production.arn
 
   deploy_stage_parameter_overrides = jsonencode({
-    EMAIL: var.development_account_email
+    EMAIL: var.production_account_email
   })
 
   name = "${local.lambda_ses}-master-to-production"

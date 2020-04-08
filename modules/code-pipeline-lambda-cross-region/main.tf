@@ -1,6 +1,6 @@
 resource "aws_codepipeline" "codepipeline" {
   name = local.code_pipeline_name
-  role_arn = aws_iam_role.codepipeline-role.arn
+  role_arn = var.code_pipeline_role_arn
 
 
   artifact_store {
@@ -15,12 +15,12 @@ resource "aws_codepipeline" "codepipeline" {
   }
 
   artifact_store {
-    location = var.code_pipeline_artifacts_bucket
+    location = var.code_pipeline_artifacts_bucket_eu_west_1
     type = "S3"
-//    region = "eu-west-1"
+    region = "eu-west-1"
 
     encryption_key {
-      id = var.kms_key_alias_arn
+      id = var.kms_key_alias_arn_eu_west_1
       type = "KMS"
     }
   }
@@ -73,7 +73,7 @@ resource "aws_codepipeline" "codepipeline" {
       name = "Deploy"
       category = "Deploy"
       owner = "AWS"
-//      region = var.deploy_stage_region
+      region = "eu-west-1"
       provider = "CloudFormation"
       input_artifacts = [
         "build_output"]
